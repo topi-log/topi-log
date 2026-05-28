@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config';
 import remarkCodeTitles from 'remark-code-titles';
 import remarkBreaks from 'remark-breaks';
 import { remarkLinkCard } from './src/lib/remarkLinkCard.mjs';
+import { remarkMermaid } from './src/lib/remarkMermaid.mjs';
 
 /** 複数の空行をその数だけ <br> に変換するプラグイン */
 function remarkMultipleBreaks() {
@@ -44,7 +45,7 @@ export default defineConfig({
   site: 'https://topi-log.com',
   integrations: [sitemap()],
   markdown: {
-    remarkPlugins: [remarkCodeTitles, remarkBreaks, remarkMultipleBreaks, remarkLinkCard],
+    remarkPlugins: [remarkMermaid, remarkCodeTitles, remarkBreaks, remarkMultipleBreaks, remarkLinkCard],
   },
 
   vite: {

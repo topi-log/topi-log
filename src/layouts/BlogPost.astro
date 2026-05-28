@@ -88,6 +88,36 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 			<a href="/articles" class="text-sm text-sky-500 hover:text-sky-700 no-underline transition-colors">← 記事一覧へ戻る</a>
 		</div>
 	</article>
+<script>
+	import mermaid from 'mermaid';
+
+	mermaid.initialize({
+		startOnLoad: false,
+		theme: 'base',
+		themeVariables: {
+			primaryColor: '#e0f2fe',
+			primaryBorderColor: '#38bdf8',
+			primaryTextColor: '#1f2937',
+			lineColor: '#38bdf8',
+			edgeLabelBackground: '#f0f9ff',
+		},
+	});
+
+	const divs = document.querySelectorAll('.mermaid-pending');
+	for (const div of divs) {
+		const code = div.textContent?.trim() ?? '';
+		const id = `mermaid-${Math.random().toString(36).slice(2)}`;
+		try {
+			const { svg } = await mermaid.render(id, code);
+			const container = document.createElement('div');
+			container.className = 'mermaid-container';
+			container.innerHTML = svg;
+			div.replaceWith(container);
+		} catch (e) {
+			console.error('Mermaid render error:', e);
+		}
+	}
+</script>
 <script define:vars={{ articleTitle: title }}>
 	// X シェアリンク
 	const shareX = document.getElementById('share-x');
