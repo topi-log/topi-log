@@ -1,62 +1,23 @@
-# Astro Starter Kit: Blog
+# MyApp
+https://github.com/topi0247/MyApp
 
-```sh
-npm create astro@latest -- --template blog
-```
+# Stats
+<p align="left">
+  <a href="https://github.com/topi0247">
+    <img height="20" src="https://komarev.com/ghpvc/?username=topi0247" />
+  </a>
+  <a href="https://github.com/topi0247">
+    <img height="20" src="https://img.shields.io/github/followers/topi0247?label=follow&logo=github&style=flat" />
+  </a>
+  <a href="https://zenn.dev/topi_log">
+    <img height="20" src="https://badgen.org/img/zenn/topi_log/articles?style=plastic" />
+  </a>
+</p>
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+[![trophy](https://github-profile-trophy.vercel.app/?username=topi0247&count_private=true&rank=-?)](https://github.com/topi0247/github-profile-trophy)
 
-Features:
+[![topi0247's GitHub stats](https://github-readme-stats.vercel.app/api?username=topi0247&include_all_commits&count_private=true)](https://github.com/topi0247/github-readme-stats)  [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=topi0247&layout=compact&langs_count=5&count_private=true)](https://github.com/anuraghazra/github-readme-stats)
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+![](http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=topi0247&theme=dark)
+![](http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=topi0247&theme=dark) ![](http://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=topi0247&theme=dark)
+![](http://github-profile-summary-cards.vercel.app/api/cards/stats?username=topi0247&theme=dark) ![](http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=topi0247&theme=dark&utcOffset=8)
