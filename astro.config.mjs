@@ -9,6 +9,7 @@ import { remarkMermaid } from './src/lib/remarkMermaid.mjs';
 
 /** 複数の空行をその数だけ <br> に変換するプラグイン */
 function remarkMultipleBreaks() {
+  /** @param {import('mdast').Root} tree @param {import('vfile').VFile} file */
   return (tree, file) => {
     const children = tree.children;
     const inserts = [];
@@ -26,6 +27,7 @@ function remarkMultipleBreaks() {
 
     // 後ろから挿入してindexがずれないようにする
     for (const { index, count } of inserts.reverse()) {
+      /** @type {import('mdast').Html[]} */
       const brs = Array.from({ length: count }, () => ({ type: 'html', value: '<br>' }));
       children.splice(index, 0, ...brs);
     }
