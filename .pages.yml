@@ -1,0 +1,50 @@
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: blog
+    label: ブログ記事
+    type: collection
+    path: src/content/blog
+    filename:
+      template: '{year}{month}{day}{hour}.md'
+      field: create
+    view:
+      fields: [title, draft, pinned]
+    fields:
+      - name: title
+        label: タイトル
+        type: string
+        required: true
+      - name: draft
+        label: 下書き
+        type: boolean
+        default: true
+      - name: pinned
+        label: ピン留め（トップ固定・1件のみtrue）
+        type: boolean
+      - name: tags
+        label: タグ
+        type: string
+        list: true
+      - name: updatedDate
+        label: 更新日
+        type: date
+      - name: koukanblogList
+        label: 交換ブログ記事リストを末尾に表示（まとめ記事専用）
+        type: boolean
+      - name: body
+        label: 本文
+        type: rich-text
+
+  - name: koukanblog
+    label: 交換ブログ記事リスト
+    type: file
+    path: src/data/koukanblog.json
+    format: json
+    fields:
+      - name: urls
+        label: 記事URL（新着順・新しい記事は先頭に追加）
+        type: string
+        list: true
