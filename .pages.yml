@@ -35,8 +35,10 @@ content:
         label: 交換ブログ記事リストを末尾に表示（まとめ記事専用）
         type: boolean
       - name: body
-        label: 本文
-        type: rich-text
+        label: 本文（Markdown）
+        type: code
+        options:
+          language: markdown
 
   - name: koukanblog
     label: 交換ブログ記事リスト
