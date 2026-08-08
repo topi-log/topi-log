@@ -1,0 +1,12 @@
+---
+import { fetchOgp, buildCard } from '@/lib/remarkLinkCard.mjs';
+
+interface Props {
+	urls: string[];
+}
+
+const { urls } = Astro.props;
+const cards = await Promise.all(urls.map(async (url) => buildCard(url, await fetchOgp(url))));
+---
+
+{cards.map((html) => <Fragment set:html={html} />)}

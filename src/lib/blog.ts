@@ -36,7 +36,7 @@ function getExcerpt(body: string): string {
  * 公開済みブログ記事を取得する（draft除外・日付降順）
  */
 export async function getBlogPosts() {
-	const posts = await getCollection('blog', ({ id }) => import.meta.env.DEV || !id.startsWith('draft'));
+	const posts = await getCollection('blog', ({ data }) => import.meta.env.DEV || data.draft !== true);
 	return posts
 		.map((post) => ({
 			...post,

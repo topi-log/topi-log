@@ -2,7 +2,7 @@ import { visit } from 'unist-util-visit';
 
 const cache = new Map();
 
-async function fetchOgp(url) {
+export async function fetchOgp(url) {
 	if (cache.has(url)) return cache.get(url);
 
 	try {
@@ -45,7 +45,7 @@ async function fetchOgp(url) {
 	}
 }
 
-function buildCard(url, ogp) {
+export function buildCard(url, ogp) {
 	const imageHtml = ogp.image
 		? `<div class="link-card-image"><img src="${ogp.image}" alt="" loading="lazy"></div>`
 		: '';

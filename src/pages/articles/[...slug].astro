@@ -1,7 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BlogPost from '@/layouts/BlogPost.astro';
+import LinkCardList from '@/components/LinkCardList.astro';
 import { getBlogPosts, getDevPosts } from '@/lib/blog';
+import koukanblog from '@/data/koukanblog.json';
 
 export async function getStaticPaths() {
 	const posts = await getBlogPosts();
@@ -9,35 +11,27 @@ export async function getStaticPaths() {
 
 	const blogPaths = posts.map((post) => ({
 		params: { slug: post.id },
-		props: { id: post.id, collection: 'blog' as const },
+		props: { id: post.id, collection: 'blog' as const, pubDate: post.data.pubDate },
 	}));
 
 	const devPaths = devPosts.map((post) => ({
 		params: { slug: `dev/${post.id}` },
-		props: { id: post.id, collection: 'dev' as const },
+		props: { id: post.id, collection: 'dev' as const, pubDate: new Date() },
 	}));
 
 	return [...blogPaths, ...devPaths];
 }
 
-const { id, collection } = Astro.props;
+const { id, collection, pubDate } = Astro.props;
 
 let entry;
-let pubDate: Date;
 
 if (collection === 'dev') {
 	const devCollection = await getCollection('dev');
 	entry = devCollection.find((p) => p.id === id)!;
-	pubDate = new Date();
 } else {
 	const blogCollection = await getCollection('blog');
-	const raw = blogCollection.find((p) => p.id === id)!;
-	entry = raw;
-	// getBlogPosts() で計算した pubDate を再計算
-	const match = id.match(/(\d{4})(\d{2})(\d{2})(\d{2})?/);
-	pubDate = match
-		? new Date(`${match[1]}-${match[2]}-${match[3]}T${match[4] ?? '00'}:00:00`)
-		: new Date(0);
+	entry = blogCollection.find((p) => p.id === id)!;
 }
 
 const { Content, headings } = await render(entry);
@@ -51,4 +45,5 @@ const { Content, headings } = await render(entry);
 	headings={headings}
 >
 	<Content />
+	{'koukanblogList' in entry.data && entry.data.koukanblogList && <LinkCardList urls={koukanblog.urls} />}
 </BlogPost>

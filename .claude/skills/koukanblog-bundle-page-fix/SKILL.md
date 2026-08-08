@@ -7,11 +7,14 @@ description: 交換ブログまとめページ（src/content/blog/20260308.md）
 
 ## 対象ファイル
 
-`src/content/blog/20260308.md`（交換ブログまとめページ）のみを修正する。他のファイルは触らない。
+以下の2ファイルのみを修正する。他のファイルは触らない。
+
+- `src/content/blog/20260308.md`（交換ブログまとめページ本文: 交換ブログとは？ / 登場人物 / 過去テーマリスト）
+- `src/data/koukanblog.json`（過去記事一覧のURLリスト）
 
 ## 手順
 
-1. `src/content/blog/20260308.md` を読む
+1. 修正対象に応じて `src/content/blog/20260308.md` または `src/data/koukanblog.json` を読む
 2. ユーザーの指示（引数）に従って修正する
 3. 修正内容を簡潔に報告する
 
@@ -41,9 +44,9 @@ X: [@handle](https://x.com/handle)
 
 ### 過去記事一覧
 
-新着順（先頭が最新）。URL を1行ずつ、空行区切りで列挙する。新しい記事は**先頭**に追加する。
+本文には URL を書かない。`src/data/koukanblog.json` の `urls` 配列で管理し、記事ページ側が自動でリンクカード表示する（frontmatter の `koukanblogList: true` がトリガー）。新着順（先頭が最新）なので、新しい記事の URL は配列の**先頭**に追加する。
 
 ## 注意
 
-- frontmatter（`title` / `pinned` / `tags`）は指示がない限り変更しない
+- frontmatter（`title` / `pinned` / `tags` / `koukanblogList`）は指示がない限り変更しない
 - 人物紹介の文体（とぴの主観によるユーモアのある紹介）を勝手に変えない
