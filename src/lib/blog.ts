@@ -49,6 +49,22 @@ export async function getBlogPosts() {
 }
 
 /**
+ * 下書き記事を取得する（プレビュー用・日付降順）
+ */
+export async function getDraftPosts() {
+	const posts = await getCollection('blog', ({ data }) => data.draft === true);
+	return posts
+		.map((post) => ({
+			...post,
+			data: {
+				...post.data,
+				pubDate: parsePubDateFromId(post.id),
+			},
+		}))
+		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+}
+
+/**
  * ピン留め記事を取得する（1件のみ）
  */
 export async function getPinnedPost() {

@@ -43,7 +43,12 @@ import cloudflare from '@astrojs/cloudflare';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://topi-log.com',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // 下書きプレビューの隠しページは sitemap に載せない
+      filter: (page) => !page.includes('/preview-'),
+    }),
+  ],
   markdown: {
     remarkPlugins: [remarkMermaid, remarkCodeTitles, remarkBreaks, remarkMultipleBreaks, remarkLinkCard],
   },

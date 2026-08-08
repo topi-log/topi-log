@@ -8,14 +8,15 @@ import { SITE_TITLE } from '@/consts';
 type Props = CollectionEntry<'blog'>['data'] & {
 	pubDate: Date;
 	headings: MarkdownHeading[];
+	noindex?: boolean;
 };
 
-const { title, pubDate, tags, headings } = Astro.props;
+const { title, pubDate, tags, headings, noindex } = Astro.props;
 
 const tocHeadings = headings.filter((h) => h.depth <= 3);
 ---
 
-<BaseLayout title={`${title} | ${SITE_TITLE}`} description={title}>
+<BaseLayout title={`${title} | ${SITE_TITLE}`} description={title} noindex={noindex}>
 	<article>
 		<!-- 記事ヘッダー -->
 		<div class="bg-white shadow-md p-6 mb-6">
