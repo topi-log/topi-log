@@ -11,7 +11,7 @@ type Props = CollectionEntry<'blog'>['data'] & {
 	noindex?: boolean;
 };
 
-const { title, pubDate, tags, headings, noindex } = Astro.props;
+const { title, pubDate, tags, headings, noindex, isuconEntries } = Astro.props;
 
 const tocHeadings = headings.filter((h) => h.depth <= 3);
 ---
@@ -53,6 +53,25 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 		<!-- 本文 -->
 		<div class="bg-white shadow-md p-6 mb-6 article-body">
 			<slot />
+
+			{isuconEntries && (
+				<section aria-labelledby="isucon-entries-heading">
+					<h2 id="isucon-entries-heading">記録一覧</h2>
+					{isuconEntries.length > 0 ? (
+						<ul class="isucon-entry-list">
+							{isuconEntries.map((entry) => (
+								<li>
+									<a href={entry.link} target="_blank" rel="noopener noreferrer">
+										{entry.member}：{entry.title}
+									</a>
+								</li>
+							))}
+						</ul>
+					) : (
+						<p>記録はまだありません。</p>
+					)}
+				</section>
+			)}
 		</div>
 
 		<!-- シェア -->
@@ -150,4 +169,16 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 		if (chevron) chevron.textContent = isOpen ? '▼' : '▲';
 	});
 </script>
+
+<style>
+	.isucon-entry-list {
+		list-style: none;
+		padding: 0;
+	}
+
+	.isucon-entry-list li {
+		padding: 0.75rem 0;
+		border-bottom: 1px solid #e5e7eb;
+	}
+</style>
 </BaseLayout>

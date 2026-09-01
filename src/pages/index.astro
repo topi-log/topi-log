@@ -4,9 +4,9 @@ import Profile from '@/components/Profile.astro';
 import PinnedPost from '@/components/PinnedPost.astro';
 import LatestPosts from '@/components/LatestPosts.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts';
-import { getPinnedPost, getAllPosts } from '@/lib/blog';
+import { getPinnedPosts, getAllPosts } from '@/lib/blog';
 
-const pinnedPost = await getPinnedPost();
+const pinnedPosts = await getPinnedPosts();
 const latestPosts = (await getAllPosts()).slice(0, 3);
 ---
 
@@ -23,7 +23,7 @@ const latestPosts = (await getAllPosts()).slice(0, 3);
 	</div>
 
 	<!-- ピン留め記事 -->
-	{pinnedPost && <PinnedPost post={pinnedPost} />}
+	{pinnedPosts.map((post) => <PinnedPost post={post} />)}
 
 	<!-- 最新の記事 -->
 	<LatestPosts posts={latestPosts} />
