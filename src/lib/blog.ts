@@ -65,11 +65,13 @@ export async function getDraftPosts() {
 }
 
 /**
- * ピン留め記事を取得する（1件のみ）
+ * ピン留め記事を表示順に取得する
  */
-export async function getPinnedPost() {
+export async function getPinnedPosts() {
 	const posts = await getBlogPosts();
-	return posts.find((post) => post.data.pinned === true) ?? null;
+	return posts
+		.filter((post) => post.data.pinned === true)
+		.sort((a, b) => (a.data.pinnedOrder ?? Number.MAX_SAFE_INTEGER) - (b.data.pinnedOrder ?? Number.MAX_SAFE_INTEGER));
 }
 
 /**

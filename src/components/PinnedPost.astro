@@ -1,9 +1,9 @@
 ---
-import type { getPinnedPost } from '@/lib/blog';
+import type { getPinnedPosts } from '@/lib/blog';
 import FormattedDate from '@/components/FormattedDate.astro';
 
 interface Props {
-	post: NonNullable<Awaited<ReturnType<typeof getPinnedPost>>>;
+	post: Awaited<ReturnType<typeof getPinnedPosts>>[number];
 }
 
 const { post } = Astro.props;

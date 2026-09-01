@@ -42,6 +42,7 @@ const { Content, headings } = await render(entry);
 	pubDate={pubDate}
 	tags={entry.data.tags}
 	updatedDate={'updatedDate' in entry.data ? entry.data.updatedDate : undefined}
+	isuconEntries={'isuconEntries' in entry.data ? entry.data.isuconEntries : undefined}
 	headings={headings}
 >
 	<Content />

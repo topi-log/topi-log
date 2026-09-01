@@ -9,9 +9,15 @@ const blog = defineCollection({
 		title: z.string(),
 		updatedDate: z.coerce.date().optional(),
 		pinned: z.boolean().optional(),
+		pinnedOrder: z.number().int().positive().optional(),
 		tags: z.array(z.string()).optional(),
 		draft: z.boolean().optional(),
 		koukanblogList: z.boolean().optional(),
+		isuconEntries: z.array(z.object({
+			title: z.string().min(1),
+			member: z.enum(['とぴ', 'sora', 'wabi']),
+			link: z.string().url(),
+		})).optional(),
 	}),
 });
 

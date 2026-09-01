@@ -2,11 +2,19 @@ media:
   input: public/images
   output: /images
 
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+
 content:
   - name: blog
     label: ブログ記事
     type: collection
     path: src/content/blog
+    exclude:
+      - 20260831-isucon2026.md
     filename:
       template: '{year}{month}{day}{hour}.md'
       field: create
@@ -50,3 +58,54 @@ content:
         label: 記事URL（新着順・新しい記事は先頭に追加）
         type: string
         list: true
+
+  - name: isucon2026-challenge-log
+    label: ISUCON2026 ちゃれんじろぐ
+    type: file
+    path: src/content/blog/20260831-isucon2026.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        hidden: true
+      - name: pinned
+        type: boolean
+        hidden: true
+      - name: pinnedOrder
+        type: number
+        hidden: true
+      - name: tags
+        type: string
+        list: true
+        hidden: true
+      - name: isuconEntries
+        label: 記録
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}（{member}）"
+        fields:
+          - name: title
+            label: タイトル
+            type: string
+            required: true
+          - name: member
+            label: メンバー
+            type: select
+            required: true
+            options:
+              values:
+                - とぴ
+                - sora
+                - wabi
+          - name: link
+            label: リンク
+            type: string
+            required: true
+            pattern:
+              regex: "^https?://.+$"
+              message: http:// または https:// で始まるURLを入力してください
+      - name: body
+        type: rich-text
+        hidden: true
