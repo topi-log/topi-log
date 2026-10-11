@@ -123,9 +123,9 @@
 .slide--section h2 {
 	font-size: 64px;
 	color: #0369a1;
-	padding: 24px 0 0;
+	padding: 0 0 20px;
 	border: 0;
-	border-top: 8px solid var(--slide-accent);
+	border-bottom: 8px solid var(--slide-accent);
 	align-self: flex-start;
 }
 
