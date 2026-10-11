@@ -87,14 +87,13 @@
 .slide .mermaid-container svg { width: 100%; height: 100%; max-width: 100% !important; }
 
 /* 表紙 */
-/* サイト背景（#e0f2fe）と同化しないよう白地にし、左の帯でスライドの輪郭を出す */
 .slide--cover {
-	box-shadow: inset 24px 0 0 var(--slide-accent);
 	justify-content: center;
 	gap: 32px;
 	padding: 88px 112px;
 }
-.slide--cover::before {
+.slide--cover::before,
+.slide--end::before {
 	content: '';
 	position: absolute;
 	inset: 40px;
@@ -146,7 +145,6 @@
 	border: 0;
 }
 .slide--center { font-size: 52px; font-weight: 800; line-height: 1.4; }
-.slide--end { box-shadow: inset 0 -16px 0 var(--slide-accent); }
 .slide--end h1,
 .slide--end h2 { font-size: 64px; color: #0369a1; }
 
