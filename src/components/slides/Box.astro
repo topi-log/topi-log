@@ -1,0 +1,42 @@
+---
+const COLORS = {
+	sky: { border: '#38bdf8', bg: '#f0f9ff', title: '#0369a1' },
+	amber: { border: '#fbbf24', bg: '#fffbeb', title: '#b45309' },
+	rose: { border: '#fb7185', bg: '#fff1f2', title: '#be123c' },
+	emerald: { border: '#34d399', bg: '#ecfdf5', title: '#047857' },
+	slate: { border: '#94a3b8', bg: '#f8fafc', title: '#334155' },
+} as const;
+
+interface Props {
+	title?: string;
+	color?: keyof typeof COLORS;
+}
+
+const { title, color = 'sky' } = Astro.props;
+const c = COLORS[color];
+---
+
+<div class="slide-box" style={{ borderColor: c.border, background: c.bg }}>
+	{title && <p class="slide-box-title" style={{ color: c.title }}>{title}</p>}
+	<div class="slide-box-body"><slot /></div>
+</div>
+
+<style>
+	.slide-box {
+		border: 3px solid;
+		border-radius: 12px;
+		padding: 24px 28px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.slide-box-title {
+		font-weight: 800;
+		font-size: 0.9em;
+	}
+	.slide-box-body {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+</style>

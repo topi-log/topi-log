@@ -1,0 +1,26 @@
+---
+interface Props {
+	/** 列の比率。"2:1" なら 2fr 1fr */
+	ratio?: string;
+	gap?: number;
+	align?: 'start' | 'center' | 'end' | 'stretch';
+}
+
+const { ratio = '1:1', gap = 48, align = 'start' } = Astro.props;
+const columns = ratio.split(':').map((n) => `${Number(n)}fr`).join(' ');
+---
+
+<div class="slide-columns" style={{ gridTemplateColumns: columns, gap: `${gap}px`, alignItems: align }}>
+	<slot />
+</div>
+
+<style>
+	.slide-columns {
+		display: grid;
+		flex: 1;
+		min-height: 0;
+	}
+	.slide-columns > :global(*) {
+		min-width: 0;
+	}
+</style>

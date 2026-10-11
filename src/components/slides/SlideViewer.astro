@@ -1,0 +1,344 @@
+---
+import '@/styles/slides.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="slide-viewer" data-slide-viewer tabindex="0" role="region" aria-roledescription="スライド" aria-label={title}>
+	<div class="slide-stage" data-stage>
+		<div class="slide-track" data-track>
+			<slot />
+		</div>
+	</div>
+
+	<div class="slide-controls" data-controls>
+		<div class="slide-progress"><div class="slide-progress-bar" data-progress></div></div>
+		<div class="slide-controls-row">
+			<button type="button" class="slide-btn" data-prev aria-label="前のスライド">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+			</button>
+			<span class="slide-counter" data-counter aria-live="polite"></span>
+			<button type="button" class="slide-btn" data-next aria-label="次のスライド">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+			</button>
+			<button type="button" class="slide-btn slide-btn-fullscreen" data-fullscreen aria-label="全画面表示">
+				<svg class="icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+				<svg class="icon-shrink" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" /></svg>
+			</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	.slide-viewer {
+		position: relative;
+		background: #fff;
+		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+		outline: none;
+	}
+	.slide-viewer:focus-visible {
+		outline: 2px solid #38bdf8;
+		outline-offset: 2px;
+	}
+
+	.slide-stage {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		user-select: none;
+	}
+	.slide-track {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1280px;
+		height: 720px;
+		transform-origin: 0 0;
+		transform: scale(var(--slide-scale, 1));
+	}
+
+	/* JS が動くまでは全スライドを縦に並べて読めるようにする */
+	.slide-viewer:not([data-ready]) .slide-stage {
+		aspect-ratio: auto;
+		overflow-x: auto;
+	}
+	.slide-viewer:not([data-ready]) .slide-track {
+		position: static;
+		transform: none;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.slide-viewer:not([data-ready]) .slide-controls {
+		display: none;
+	}
+	.slide-viewer[data-ready] :global(.slide:not(.is-active)) {
+		display: none;
+	}
+
+	.slide-controls {
+		background: #fff;
+		border-top: 1px dashed #bae6fd;
+		transition: opacity 0.3s;
+	}
+	.slide-progress {
+		height: 3px;
+		background: #e0f2fe;
+	}
+	.slide-progress-bar {
+		height: 100%;
+		background: #38bdf8;
+		transition: width 0.2s;
+	}
+	.slide-controls-row {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 8px;
+	}
+	.slide-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border: 0;
+		border-radius: 9999px;
+		background: transparent;
+		color: #0284c7;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+	.slide-btn:hover {
+		background: #e0f2fe;
+	}
+	.slide-btn:disabled {
+		color: #cbd5e1;
+		cursor: default;
+		background: transparent;
+	}
+	.slide-btn-fullscreen {
+		margin-left: auto;
+	}
+	.slide-counter {
+		min-width: 4.5em;
+		text-align: center;
+		font-size: 0.8125rem;
+		color: #6b7280;
+		font-variant-numeric: tabular-nums;
+	}
+	.icon-shrink {
+		display: none;
+	}
+
+	/* 全画面 */
+	.slide-viewer:fullscreen,
+	.slide-viewer.is-pseudo-fullscreen {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #000;
+		box-shadow: none;
+	}
+	.slide-viewer.is-pseudo-fullscreen {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		height: 100dvh;
+	}
+	.slide-viewer:fullscreen .slide-stage,
+	.slide-viewer.is-pseudo-fullscreen .slide-stage {
+		width: min(100vw, calc(100dvh * 16 / 9));
+	}
+	.slide-viewer:fullscreen .slide-controls,
+	.slide-viewer.is-pseudo-fullscreen .slide-controls {
+		position: absolute;
+		left: 50%;
+		bottom: 16px;
+		transform: translateX(-50%);
+		width: min(480px, calc(100vw - 32px));
+		border: 0;
+		border-radius: 9999px;
+		overflow: hidden;
+		box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+	}
+	.slide-viewer:fullscreen .icon-expand,
+	.slide-viewer.is-pseudo-fullscreen .icon-expand {
+		display: none;
+	}
+	.slide-viewer:fullscreen .icon-shrink,
+	.slide-viewer.is-pseudo-fullscreen .icon-shrink {
+		display: block;
+	}
+	.slide-viewer[data-idle] {
+		cursor: none;
+	}
+	.slide-viewer[data-idle] .slide-controls {
+		opacity: 0;
+		pointer-events: none;
+	}
+</style>
+
+<script>
+	const SLIDE_WIDTH = 1280;
+	const IDLE_MS = 2500;
+	const SWIPE_THRESHOLD = 50;
+
+	function setup(viewer: HTMLElement) {
+		const stage = viewer.querySelector<HTMLElement>('[data-stage]')!;
+		const track = viewer.querySelector<HTMLElement>('[data-track]')!;
+		const slides = [...track.querySelectorAll<HTMLElement>(':scope > .slide')];
+		const counter = viewer.querySelector<HTMLElement>('[data-counter]')!;
+		const progress = viewer.querySelector<HTMLElement>('[data-progress]')!;
+		const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-prev]')!;
+		const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-next]')!;
+		const fullscreenBtn = viewer.querySelector<HTMLButtonElement>('[data-fullscreen]')!;
+		if (slides.length === 0) return;
+
+		let current = 0;
+
+		function pageFromHash(): number | undefined {
+			const match = location.hash.match(/^#(\d+)$/);
+			if (!match) return undefined;
+			const page = Number(match[1]);
+			return page >= 1 && page <= slides.length ? page - 1 : 0;
+		}
+
+		function goTo(index: number, { updateHash = true } = {}) {
+			current = Math.min(Math.max(index, 0), slides.length - 1);
+			slides.forEach((slide, i) => slide.classList.toggle('is-active', i === current));
+			counter.textContent = `${current + 1} / ${slides.length}`;
+			progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+			prevBtn.disabled = current === 0;
+			nextBtn.disabled = current === slides.length - 1;
+			// 戻るボタンでページ単位に戻されると発表中に煩わしいので履歴は増やさない
+			if (updateHash) history.replaceState(null, '', `#${current + 1}`);
+		}
+
+		const next = () => goTo(current + 1);
+		const prev = () => goTo(current - 1);
+
+		new ResizeObserver(() => {
+			viewer.style.setProperty('--slide-scale', String(stage.clientWidth / SLIDE_WIDTH));
+		}).observe(stage);
+
+		// フルスクリーン
+		const isNativeFullscreen = () => document.fullscreenElement === viewer;
+		const isPseudoFullscreen = () => viewer.classList.contains('is-pseudo-fullscreen');
+		const isFullscreen = () => isNativeFullscreen() || isPseudoFullscreen();
+
+		function setPseudoFullscreen(on: boolean) {
+			viewer.classList.toggle('is-pseudo-fullscreen', on);
+			document.documentElement.style.overflow = on ? 'hidden' : '';
+			onFullscreenChange();
+		}
+
+		function toggleFullscreen() {
+			if (isNativeFullscreen()) document.exitFullscreen();
+			else if (isPseudoFullscreen()) setPseudoFullscreen(false);
+			// iOS Safari など要素の Fullscreen API が無い環境では CSS で画面全体に広げる
+			// iframe 内などで要求が拒否された場合も同様
+			else if (document.fullscreenEnabled && viewer.requestFullscreen) viewer.requestFullscreen().catch(() => setPseudoFullscreen(true));
+			else setPseudoFullscreen(true);
+			viewer.focus({ preventScroll: true });
+		}
+
+		let idleTimer: number | undefined;
+		function wake() {
+			viewer.removeAttribute('data-idle');
+			clearTimeout(idleTimer);
+			if (isFullscreen()) idleTimer = window.setTimeout(() => viewer.setAttribute('data-idle', ''), IDLE_MS);
+		}
+
+		function onFullscreenChange() {
+			fullscreenBtn.setAttribute('aria-label', isFullscreen() ? '全画面表示を終了' : '全画面表示');
+			wake();
+		}
+
+		document.addEventListener('fullscreenchange', onFullscreenChange);
+		viewer.addEventListener('pointermove', wake);
+
+		// 操作
+		prevBtn.addEventListener('click', prev);
+		nextBtn.addEventListener('click', next);
+		fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+		stage.addEventListener('click', (e) => {
+			viewer.focus({ preventScroll: true });
+			const target = e.target as HTMLElement;
+			if (target.closest('a, button, input, textarea, select, summary, video, [data-no-advance]')) return;
+			const rect = stage.getBoundingClientRect();
+			if (e.clientX - rect.left < rect.width / 2) prev();
+			else next();
+		});
+
+		let touchStart: { x: number; y: number } | undefined;
+		stage.addEventListener('touchstart', (e) => {
+			touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+		}, { passive: true });
+		stage.addEventListener('touchend', (e) => {
+			if (!touchStart) return;
+			const dx = e.changedTouches[0].clientX - touchStart.x;
+			const dy = e.changedTouches[0].clientY - touchStart.y;
+			touchStart = undefined;
+			if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+			if (dx < 0) next();
+			else prev();
+		});
+
+		// ブログページのスクロールを奪わないよう、ビューアにフォーカスがあるときだけ反応する
+		document.addEventListener('keydown', (e) => {
+			if (!isFullscreen() && !viewer.contains(document.activeElement)) return;
+			if (e.ctrlKey || e.metaKey || e.altKey) return;
+			if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]')) return;
+
+			switch (e.key) {
+				case 'ArrowRight':
+				case 'ArrowDown':
+				case 'PageDown':
+				case ' ':
+					next();
+					break;
+				case 'ArrowLeft':
+				case 'ArrowUp':
+				case 'PageUp':
+					prev();
+					break;
+				case 'Home':
+					goTo(0);
+					break;
+				case 'End':
+					goTo(slides.length - 1);
+					break;
+				case 'f':
+				case 'F':
+					toggleFullscreen();
+					break;
+				case 'Escape':
+					if (!isPseudoFullscreen()) return;
+					setPseudoFullscreen(false);
+					break;
+				default:
+					return;
+			}
+			e.preventDefault();
+		});
+
+		window.addEventListener('hashchange', () => {
+			const page = pageFromHash();
+			if (page !== undefined) goTo(page);
+		});
+
+		const initial = pageFromHash();
+		goTo(initial ?? 0, { updateHash: initial !== undefined });
+		viewer.setAttribute('data-ready', '');
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-slide-viewer]').forEach(setup);
+</script>

@@ -1,0 +1,174 @@
+/* スライド本体。1280×720 の固定キャンバスとしてデザインし、表示サイズはビューア側で拡縮する */
+.slide {
+	--slide-accent: #0ea5e9;
+	--slide-accent-soft: #e0f2fe;
+	--slide-text: #1f2937;
+	--slide-muted: #6b7280;
+
+	position: relative;
+	box-sizing: border-box;
+	width: 1280px;
+	height: 720px;
+	overflow: hidden;
+	padding: 72px 88px 64px;
+	background: #fff;
+	color: var(--slide-text);
+	font-family: var(--font-sans);
+	font-size: 28px;
+	line-height: 1.6;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+.slide::after {
+	content: 'topi-log';
+	position: absolute;
+	right: 32px;
+	bottom: 20px;
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	color: #7dd3fc;
+}
+
+.slide h1,
+.slide h2 {
+	margin: 0;
+	font-size: 48px;
+	font-weight: 800;
+	line-height: 1.3;
+	padding-left: 24px;
+	border-left: 10px solid var(--slide-accent);
+}
+.slide h3 {
+	margin: 0;
+	font-size: 34px;
+	font-weight: 700;
+	color: #0369a1;
+}
+.slide p { margin: 0; }
+.slide a { color: #0284c7; text-decoration: underline; }
+.slide strong { color: #0369a1; }
+.slide ul,
+.slide ol { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 12px; }
+.slide ul { list-style: disc; }
+.slide ol { list-style: decimal; }
+.slide li::marker { color: var(--slide-accent); }
+.slide ul ul,
+.slide ol ol { margin-top: 12px; font-size: 0.85em; }
+.slide code {
+	font-family: var(--font-mono);
+	background: #f0f9ff;
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+	font-size: 0.85em;
+}
+.slide pre {
+	margin: 0;
+	padding: 24px 28px;
+	border-radius: 8px;
+	font-size: 22px;
+	line-height: 1.5;
+	overflow: hidden;
+}
+.slide pre code { background: none; padding: 0; font-size: inherit; }
+.slide blockquote {
+	margin: 0;
+	padding-left: 24px;
+	border-left: 4px solid #bae6fd;
+	color: var(--slide-muted);
+}
+.slide img { max-width: 100%; height: auto; }
+.slide table { border-collapse: collapse; font-size: 24px; }
+.slide th,
+.slide td { border: 1px solid #bae6fd; padding: 8px 16px; }
+.slide th { background: var(--slide-accent-soft); }
+.slide .mermaid-container { flex: 1; min-height: 0; display: flex; justify-content: center; align-items: center; }
+/* mermaid は描画時の幅を inline の max-width で固定するため、キャンバスに合わせて拡大させる */
+.slide .mermaid-container svg { width: 100%; height: 100%; max-width: 100% !important; }
+
+/* 表紙 */
+.slide--cover {
+	background: var(--slide-accent-soft);
+	justify-content: center;
+	gap: 32px;
+	padding: 88px 112px;
+}
+.slide--cover::before {
+	content: '';
+	position: absolute;
+	inset: 40px;
+	border: 2px dashed #7dd3fc;
+	pointer-events: none;
+}
+.slide--cover h1 {
+	font-size: 68px;
+	padding: 0;
+	border: 0;
+}
+.slide--cover .slide-cover-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 28px;
+	color: var(--slide-muted);
+}
+.slide--cover .slide-cover-event { color: #0369a1; font-weight: 700; }
+
+/* 章区切り */
+.slide--section {
+	background: var(--slide-accent);
+	color: #fff;
+	justify-content: center;
+}
+.slide--section::after { color: #bae6fd; }
+.slide--section h1,
+.slide--section h2 {
+	font-size: 64px;
+	padding: 0;
+	border: 0;
+}
+.slide--section a,
+.slide--section strong { color: #fff; }
+
+/* 一言メッセージ・締め */
+.slide--center,
+.slide--end {
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+.slide--center h1,
+.slide--center h2,
+.slide--end h1,
+.slide--end h2 {
+	padding: 0;
+	border: 0;
+}
+.slide--center { font-size: 52px; font-weight: 800; line-height: 1.4; }
+.slide--end { background: var(--slide-accent-soft); }
+.slide--end h1,
+.slide--end h2 { font-size: 64px; color: #0369a1; }
+
+/* 画像メイン */
+.slide--image {
+	padding: 40px;
+	gap: 16px;
+	justify-content: center;
+	align-items: center;
+}
+.slide--image > p:has(img) {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.slide--image > p img {
+	max-height: 100%;
+	width: auto;
+	object-fit: contain;
+}
+.slide-caption {
+	font-size: 22px;
+	color: var(--slide-muted);
+}

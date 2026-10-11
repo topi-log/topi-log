@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FormattedDate from '@/components/FormattedDate.astro';
+import { SITE_TITLE } from '@/consts';
+import { getSlides } from '@/lib/slides';
+
+const slides = await getSlides();
+---
+
+<BaseLayout title={`Slides | ${SITE_TITLE}`} description="スライド一覧">
+	<div class="flex flex-col gap-3">
+		{slides.map(({ slug, date, entry }) => (
+			<div class="bg-white shadow-md p-5">
+				<div class="flex flex-wrap items-center gap-2 mb-1">
+					<p class="text-xs text-gray-400"><FormattedDate date={date} /></p>
+					{entry.data.event && (
+						<span class="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-500">{entry.data.event}</span>
+					)}
+					{entry.data.draft && (
+						<span class="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-500">draft</span>
+					)}
+				</div>
+				<a
+					href={`/slides/${slug}`}
+					class="block text-base font-medium text-gray-800 hover:text-sky-600 transition-colors no-underline mb-2"
+				>
+					{entry.data.title}
+				</a>
+				{entry.data.description && (
+					<p class="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-2">{entry.data.description}</p>
+				)}
+				<div class="text-right">
+					<a href={`/slides/${slug}`} class="text-xs text-sky-500 hover:text-sky-700 no-underline transition-colors">
+						スライドを見る →
+					</a>
+				</div>
+			</div>
+		))}
+	</div>
+
+	{slides.length === 0 && (
+		<p class="text-center text-sm text-gray-400 py-8">スライドはまだありません</p>
+	)}
+</BaseLayout>
