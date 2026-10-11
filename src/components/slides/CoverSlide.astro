@@ -1,0 +1,19 @@
+---
+import FormattedDate from '@/components/FormattedDate.astro';
+
+interface Props {
+	title: string;
+	date: Date;
+	event?: string;
+}
+
+const { title, date, event } = Astro.props;
+---
+
+<section class="slide slide--cover" data-layout="cover">
+	<h1>{title}</h1>
+	<div class="slide-cover-meta">
+		{event && <p class="slide-cover-event">{event}</p>}
+		<p><FormattedDate date={date} /> / とぴ</p>
+	</div>
+</section>

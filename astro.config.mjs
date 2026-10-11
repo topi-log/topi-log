@@ -1,11 +1,13 @@
 // @ts-check
 
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import remarkCodeTitles from 'remark-code-titles';
 import remarkBreaks from 'remark-breaks';
 import { remarkLinkCard } from './src/lib/remarkLinkCard.mjs';
 import { remarkMermaid } from './src/lib/remarkMermaid.mjs';
+import { remarkSlides } from './src/lib/remarkSlides.mjs';
 
 /** 複数の空行をその数だけ <br> に変換するプラグイン */
 function remarkMultipleBreaks() {
@@ -49,6 +51,11 @@ export default defineConfig({
     sitemap({
       // 下書きプレビューの隠しページは sitemap に載せない
       filter: (page) => !page.includes('/preview-'),
+    }),
+    // MDX はスライド専用。ブログ用の改行プラグインは MDX が扱えない html ノードを生成するため引き継がない
+    mdx({
+      extendMarkdownConfig: false,
+      remarkPlugins: [[remarkMermaid, { mdx: true }], remarkSlides],
     }),
   ],
   markdown: {

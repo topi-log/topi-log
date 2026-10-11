@@ -1,0 +1,57 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FormattedDate from '@/components/FormattedDate.astro';
+import MermaidRenderer from '@/components/MermaidRenderer.astro';
+import CoverSlide from '@/components/slides/CoverSlide.astro';
+import SlideViewer from '@/components/slides/SlideViewer.astro';
+import { slideComponents } from '@/components/slides';
+import { SITE_TITLE } from '@/consts';
+import { getSlides } from '@/lib/slides';
+
+export async function getStaticPaths() {
+	const slides = await getSlides();
+	return slides.map(({ slug, date, entry }) => ({
+		params: { slug },
+		props: { date, entry },
+	}));
+}
+
+const { date, entry } = Astro.props;
+const { title, event, eventUrl, description } = entry.data;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${title} | ${SITE_TITLE}`} description={description ?? title}>
+	<Fragment slot="head">
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" />
+	</Fragment>
+	<SlideViewer title={title}>
+		<CoverSlide title={title} date={date} event={event} />
+		<Content components={slideComponents} />
+	</SlideViewer>
+
+	<div class="bg-white shadow-md p-6 mt-6 mb-6">
+		<h1 class="text-xl font-bold text-gray-800 mb-3 leading-snug">{title}</h1>
+		<p class="text-xs text-gray-400">
+			<FormattedDate date={date} />
+			{event && (
+				<>
+					{' / '}
+					{eventUrl ? (
+						<a href={eventUrl} target="_blank" rel="noopener noreferrer" class="text-sky-500 hover:text-sky-700">{event}</a>
+					) : event}
+				</>
+			)}
+		</p>
+		{description && <p class="text-sm text-gray-600 leading-relaxed mt-3">{description}</p>}
+	</div>
+
+	<div class="text-left">
+		<a href="/slides" class="text-sm text-sky-500 hover:text-sky-700 no-underline transition-colors">← スライド一覧へ戻る</a>
+	</div>
+
+	<MermaidRenderer />
+</BaseLayout>

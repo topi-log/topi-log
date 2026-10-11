@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/mdx": "^4.3.14",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "@tailwindcss/vite": "^4.2.1",
@@ -24,6 +25,9 @@
   },
   "devDependencies": {
     "oxlint": "^1.51.0",
-    "typescript": "^7.0.2"
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "typescript": "^7.0.2",
+    "unified": "^11.0.5"
   }
 }

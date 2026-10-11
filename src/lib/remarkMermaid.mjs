@@ -1,9 +1,20 @@
 import { visit } from 'unist-util-visit';
 
-export function remarkMermaid() {
+/** @param {{ mdx?: boolean }} [options] MDX は html ノードを扱えないため JSX 要素で出力する */
+export function remarkMermaid({ mdx = false } = {}) {
   return (tree) => {
     visit(tree, 'code', (node, index, parent) => {
       if (node.lang !== 'mermaid') return;
+
+      if (mdx) {
+        parent.children[index] = {
+          type: 'mdxJsxFlowElement',
+          name: 'div',
+          attributes: [{ type: 'mdxJsxAttribute', name: 'class', value: 'mermaid-pending' }],
+          children: [{ type: 'text', value: node.value }],
+        };
+        return;
+      }
 
       const escaped = node.value
         .replace(/&/g, '&amp;')

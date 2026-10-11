@@ -1,0 +1,31 @@
+---
+interface Props {
+	/** 1280×720 のキャンバス上の px 座標 */
+	x: number;
+	y: number;
+	w?: number;
+	h?: number;
+	rotate?: number;
+}
+
+const { x, y, w, h, rotate } = Astro.props;
+---
+
+<div
+	class="slide-place"
+	style={{
+		left: `${x}px`,
+		top: `${y}px`,
+		width: w !== undefined ? `${w}px` : undefined,
+		height: h !== undefined ? `${h}px` : undefined,
+		transform: rotate ? `rotate(${rotate}deg)` : undefined,
+	}}
+>
+	<slot />
+</div>
+
+<style>
+	.slide-place {
+		position: absolute;
+	}
+</style>

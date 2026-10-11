@@ -29,4 +29,19 @@ const dev = defineCollection({
 	}),
 });
 
-export const collections = { blog, dev };
+const slides = defineCollection({
+	loader: glob({
+		base: './src/content/slides',
+		pattern: '*/index.mdx',
+		generateId: ({ entry }) => entry.split('/')[0],
+	}),
+	schema: z.object({
+		title: z.string(),
+		event: z.string().optional(),
+		eventUrl: z.string().url().optional(),
+		description: z.string().optional(),
+		draft: z.boolean().optional(),
+	}),
+});
+
+export const collections = { blog, dev, slides };
