@@ -116,19 +116,18 @@
 
 /* 章区切り */
 .slide--section {
-	background: var(--slide-accent);
-	color: #fff;
+	background: #f0f9ff;
 	justify-content: center;
 }
-.slide--section::after { color: #bae6fd; }
 .slide--section h1,
 .slide--section h2 {
 	font-size: 64px;
-	padding: 0;
+	color: #0369a1;
+	padding: 24px 0 0;
 	border: 0;
+	border-top: 8px solid var(--slide-accent);
+	align-self: flex-start;
 }
-.slide--section a,
-.slide--section strong { color: #fff; }
 
 /* 一言メッセージ・締め */
 .slide--center,
