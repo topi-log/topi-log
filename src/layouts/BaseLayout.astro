@@ -17,6 +17,7 @@ const { title, description, noindex } = Astro.props;
 	<head>
 		<BaseHead title={title} description={description} />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
+		<slot name="head" />
 	</head>
 	<body class="bg-[#e0f2fe] text-gray-800 min-h-screen flex flex-col">
 		<Header />

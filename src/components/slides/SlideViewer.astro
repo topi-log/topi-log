@@ -25,7 +25,10 @@ const { title } = Astro.props;
 			<button type="button" class="slide-btn" data-next aria-label="次のスライド">
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
 			</button>
-			<button type="button" class="slide-btn slide-btn-fullscreen" data-fullscreen aria-label="全画面表示">
+			<button type="button" class="slide-btn slide-btn-window" data-window-fullscreen aria-label="ブラウザ内で全画面表示">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18" /></svg>
+			</button>
+			<button type="button" class="slide-btn" data-fullscreen aria-label="全画面表示">
 				<svg class="icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
 				<svg class="icon-shrink" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" /></svg>
 			</button>
@@ -123,8 +126,11 @@ const { title } = Astro.props;
 		cursor: default;
 		background: transparent;
 	}
-	.slide-btn-fullscreen {
+	.slide-btn-window {
 		margin-left: auto;
+	}
+	.slide-viewer.is-pseudo-fullscreen .slide-btn-window {
+		background: #e0f2fe;
 	}
 	.slide-counter {
 		min-width: 4.5em;
@@ -168,12 +174,10 @@ const { title } = Astro.props;
 		overflow: hidden;
 		box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
 	}
-	.slide-viewer:fullscreen .icon-expand,
-	.slide-viewer.is-pseudo-fullscreen .icon-expand {
+	.slide-viewer:fullscreen .icon-expand {
 		display: none;
 	}
-	.slide-viewer:fullscreen .icon-shrink,
-	.slide-viewer.is-pseudo-fullscreen .icon-shrink {
+	.slide-viewer:fullscreen .icon-shrink {
 		display: block;
 	}
 	.slide-viewer[data-idle] {
@@ -199,6 +203,7 @@ const { title } = Astro.props;
 		const prevBtn = viewer.querySelector<HTMLButtonElement>('[data-prev]')!;
 		const nextBtn = viewer.querySelector<HTMLButtonElement>('[data-next]')!;
 		const fullscreenBtn = viewer.querySelector<HTMLButtonElement>('[data-fullscreen]')!;
+		const windowFullscreenBtn = viewer.querySelector<HTMLButtonElement>('[data-window-fullscreen]')!;
 		if (slides.length === 0) return;
 
 		let current = 0;
@@ -240,12 +245,24 @@ const { title } = Astro.props;
 		}
 
 		function toggleFullscreen() {
-			if (isNativeFullscreen()) document.exitFullscreen();
-			else if (isPseudoFullscreen()) setPseudoFullscreen(false);
-			// iOS Safari など要素の Fullscreen API が無い環境では CSS で画面全体に広げる
-			// iframe 内などで要求が拒否された場合も同様
-			else if (document.fullscreenEnabled && viewer.requestFullscreen) viewer.requestFullscreen().catch(() => setPseudoFullscreen(true));
-			else setPseudoFullscreen(true);
+			if (isNativeFullscreen()) {
+				document.exitFullscreen();
+			} else {
+				if (isPseudoFullscreen()) setPseudoFullscreen(false);
+				// iOS Safari など要素の Fullscreen API が無い環境や、iframe 内で拒否された場合はブラウザ内全画面で代用する
+				if (document.fullscreenEnabled && viewer.requestFullscreen) viewer.requestFullscreen().catch(() => setPseudoFullscreen(true));
+				else setPseudoFullscreen(true);
+			}
+			viewer.focus({ preventScroll: true });
+		}
+
+		function toggleWindowFullscreen() {
+			if (isPseudoFullscreen()) {
+				setPseudoFullscreen(false);
+			} else {
+				if (isNativeFullscreen()) document.exitFullscreen();
+				setPseudoFullscreen(true);
+			}
 			viewer.focus({ preventScroll: true });
 		}
 
@@ -257,7 +274,8 @@ const { title } = Astro.props;
 		}
 
 		function onFullscreenChange() {
-			fullscreenBtn.setAttribute('aria-label', isFullscreen() ? '全画面表示を終了' : '全画面表示');
+			fullscreenBtn.setAttribute('aria-label', isNativeFullscreen() ? '全画面表示を終了' : '全画面表示');
+			windowFullscreenBtn.setAttribute('aria-label', isPseudoFullscreen() ? 'ブラウザ内全画面を終了' : 'ブラウザ内で全画面表示');
 			wake();
 		}
 
@@ -268,6 +286,7 @@ const { title } = Astro.props;
 		prevBtn.addEventListener('click', prev);
 		nextBtn.addEventListener('click', next);
 		fullscreenBtn.addEventListener('click', toggleFullscreen);
+		windowFullscreenBtn.addEventListener('click', toggleWindowFullscreen);
 
 		stage.addEventListener('click', (e) => {
 			viewer.focus({ preventScroll: true });
@@ -319,6 +338,10 @@ const { title } = Astro.props;
 				case 'f':
 				case 'F':
 					toggleFullscreen();
+					break;
+				case 'w':
+				case 'W':
+					toggleWindowFullscreen();
 					break;
 				case 'Escape':
 					if (!isPseudoFullscreen()) return;
